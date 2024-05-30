@@ -43,7 +43,7 @@
     CREATE TABLE IF NOT EXISTS tbl_ServiceAvailability (
         service_avail_id INT AUTO_INCREMENT PRIMARY KEY,
         service_id INT NOT NULL,
-        avail_date DATE NOT NULL,
+        avail_date VARCHAR(20) NOT NULL,
         avail_start_time TIME NOT NULL,
         avail_end_time TIME NOT NULL,
         FOREIGN KEY (service_id) REFERENCES tbl_Services(service_id)
@@ -52,7 +52,7 @@
     CREATE TABLE IF NOT EXISTS tbl_DoctorAvailability (
         doctor_avail_id INT AUTO_INCREMENT PRIMARY KEY,
         doctor_id INT NOT NULL,
-        avail_date DATE NOT NULL,
+        avail_date VARCHAR(20) NOT NULL,
         avail_start_time TIME NOT NULL,
         avail_end_time TIME NOT NULL,
         FOREIGN KEY (doctor_id) REFERENCES tbl_Doctors(doctor_id)

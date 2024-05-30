@@ -3,46 +3,47 @@
 require_once('../../../includes/config.php');
 
 try {
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    // Get the form data
+    $first_name = $_POST['first_name'];
+    $middle_name = $_POST['middle_name'];
+    $last_name = $_POST['last_name'];
+    $contact = $_POST['contact'];
+    $avail_dates = $_POST['avail_dates']; // Changed to array of dates
+    $avail_start_time = $_POST['avail_start_time'];
+    $avail_end_time = $_POST['avail_end_time'];
 
-	$doctor_name = $_POST['doctor_name'];
-	$avail_date = $_POST['avail_date'];
-	$avail_time = $_POST['avail_time'];
-	$contact = $_POST['contact'];
-	$email = $_POST['email'];
-	$address = $_POST['address'];
+    // Insert into tbl_Doctors
+    $sql = "INSERT INTO tbl_Doctors (first_name, middle_name, last_name, contact)
+            VALUES (?, ?, ?, ?);";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(1, $first_name, PDO::PARAM_STR);
+    $stmt->bindParam(2, $middle_name, PDO::PARAM_STR);
+    $stmt->bindParam(3, $last_name, PDO::PARAM_STR);
+    $stmt->bindParam(4, $contact, PDO::PARAM_STR);
+    $stmt->execute();
 
-	$data = [
-		'doctor_name' => $doctor_name,
-		'avail_date' => $avail_date,
-		'avail_time' => $avail_time,
-		'contact' => $contact,
-		'email' => $email,
-		'address' => $address
-	];
+    // Get the last inserted doctor ID
+    $doctor_id = $pdo->lastInsertId();
 
+    // Insert into tbl_DoctorAvailability for each available date
+    $sql = "INSERT INTO tbl_DoctorAvailability (doctor_id, avail_date, avail_start_time, avail_end_time)
+            VALUES (?, ?, ?, ?);";
+    $stmt = $pdo->prepare($sql);
 
-	$sql = "INSERT INTO tbl_Doctors (doctor_name, avail_date, avail_time, contact, email, address)
-	VALUES (?, ?, ?, ?, ?, ?);";
+    foreach ($avail_dates as $avail_date) {
+        $stmt->bindParam(1, $doctor_id, PDO::PARAM_INT);
+        $stmt->bindParam(2, $avail_date, PDO::PARAM_STR);
+        $stmt->bindParam(3, $avail_start_time, PDO::PARAM_STR); // Changed to PARAM_STR
+        $stmt->bindParam(4, $avail_end_time, PDO::PARAM_STR); // Changed to PARAM_STR
+        $stmt->execute();
+    }
 
-	$stmt = $pdo->prepare($sql);
-
-	$stmt->bindParam(1, $doctor_name, PDO::PARAM_STR);
-	$stmt->bindParam(2, $avail_date, PDO::PARAM_STR);
-	$stmt->bindParam(3, $avail_time, PDO::PARAM_STR);
-	$stmt->bindParam(4, $contact, PDO::PARAM_STR);
-	$stmt->bindParam(5, $email, PDO::PARAM_STR);
-	$stmt->bindParam(6, $address, PDO::PARAM_STR);
-
-	$stmt->execute();
-
-
-	header('Content-Type: application/json');
-
-	echo json_encode(array("status" => "success", "process" => "create doctor", "doctor data" => $data));
-
+    header('Content-Type: application/json');
+    echo json_encode(array("status" => "success", "process" => "add doctor and availability", "data" => "Doctor added successfully"));
 
 } catch (PDOException $e) {
-	echo json_encode(["status" => "error", "message" => $e->getMessage(), "report" => "catch reached"]);
+    header('Content-Type: application/json');
+    echo json_encode(array("status" => "error", "message" => $e->getMessage(), "process" => "add doctor and availability"));
 }

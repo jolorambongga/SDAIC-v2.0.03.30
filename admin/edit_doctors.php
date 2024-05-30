@@ -55,18 +55,18 @@ include_once('header.php');
                 <!-- doctor first_name, middle_name, last_name, contact, avail_date, avail_time, action -->
                 <!-- start doctor name -->
                 <label for="first_name" class="form-label">Doctor's First Name</label>
-                <input type="text" id="first_name" class="form-control">
+                <input type="text" id="first_name" class="form-control" required>
                 <pre></pre>
                 <label for="middle_name" class="form-label">Doctor's Middle Name</label>
                 <input type="text" id="middle_name" class="form-control">
                 <pre></pre>
                 <label for="last_name" class="form-label">Doctor's Last Name</label>
-                <input type="text" id="last_name" class="form-control">
+                <input type="text" id="last_name" class="form-control" required>
                 <pre></pre>
                 <!-- end doctor name -->
                 <!-- start doctor contact -->
                 <label for="contact" class="form-label">Doctor's Contact</label>
-                <input type="number" id="contact" class="form-control">
+                <input type="number" id="contact" class="form-control" required>
                 <pre></pre>
                 <!-- end doctor contact -->
                 <!-- start avail_date -->
@@ -121,8 +121,8 @@ include_once('header.php');
                 <!-- start service end time -->
                 <div class="input-group mb-3">
                   <label class="input-group-text" for="end_time">End Time</label>
-                  <select class="form-select" id="start_time">
-                    <option selected>Select Start Time...</option>
+                  <select class="form-select" id="end_time">
+                    <option selected>Select End Time...</option>
                     <optgroup label="AM">
                       <option value="9:00 AM">10:00 AM</option>
                       <option value="9:00 AM">11:00 AM</option>
@@ -150,6 +150,92 @@ include_once('header.php');
       <!-- end modal -->
     </div>
   </div>
+
+  <!-- start jQuery script -->
+  <script>
+    $(document).ready(function () {
+      console.log('ready');
+      // CREATE DOCTOR
+      $('#frmAddDoctor').off('submit').submit(function (e) {
+        e.preventDefault();
+
+        var first_name = $('#first_name').val();
+        var middle_name = $('#middle_name').val();
+        var last_name = $('#last_name').val();
+        var contact = $('#contact').val();
+        
+        var avail_dates = [];
+        $('#avail_date .btn-check:checked').each(function () {
+          avail_dates.push($(this).next('label').text());
+        });
+
+
+        var avail_start_time = $('#start_time').val();
+        var avail_end_time = $('#end_time').val();
+
+        var doctor_data = {
+          first_name: first_name,
+          middle_name: middle_name,
+          last_name: last_name,
+          contact: contact,
+          avail_dates: avail_dates,
+          avail_start_time: avail_start_time,
+          avail_end_time: avail_end_time
+        }
+
+        // POST
+        $.ajax({
+          type: 'POST',
+          url: 'handles/doctors/add_doctor.php',
+          data: doctor_data,
+          dataType: 'JSON',
+          success: function(response) {
+            // console.log(data);
+            console.log('ADD DOCTOR RESPONSE:', response);
+          },
+          error: function(error) {
+            console.log('ADD DOCTOR ERROR:', error);
+          }
+        }); // END POST
+      }); // END CREATE DOCTOR
+
+      // CLOSE MODAL FUNCTION
+      function closeModal() {
+        $('#modAddDoctor .btn-close').click();
+        $('#modEditDoctor .btn-close').click();
+        $('#modDeleteDoctor .btn-close').click();
+        clearFields();
+      }
+
+
+      // CLEAR FIELDS FUNCTION
+      function clearFields() {
+        $('#first_name').val('');
+        $('#middle_name').val('');
+        $('#last_name').val('');
+        $('#contact').val('');
+        $('#avail_date').val('');
+        $('#avail_start_time').val('');
+        $('#avail_end_time').val('');
+      } // END CLEAR FIELDS FUNCTION
+
+      // ON CLOSE MODAL
+      $('#modAddDoctor').on('hidden.bs.modal', function () {
+        clearFields();
+      });
+
+      $('#modEditDoctor').on('hidden.bs.modal', function () {
+        clearFields();
+      });
+
+      $('#modDeleteDoctor').on('hidden.bs.modal', function () {
+        clearFields();
+      }); // END ON CLOSE MODAL
+
+
+    }); // END READY
+  </script>
+  <!-- end jQuery script -->
 
   <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
 </body>
