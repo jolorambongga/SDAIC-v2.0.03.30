@@ -75,77 +75,11 @@ include_once('header.php');
                 <textarea type="text" id="description" class="form-control"></textarea>
                 <pre></pre>
                 <!-- end service description -->
-                <!-- service available date -->
-                <div class="btn-group w-100" role="group">
+                
+                <!-- start doctor sched -->
+                <button id="btnSetSched" type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#modServiceSched">Set Schedule</button><pre></pre>
+                <!-- end doctor sched -->
 
-                  <input type="checkbox" class="btn-check" id="day_sun" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_sun">Sun</label>
-
-                  <input type="checkbox" class="btn-check" id="day_mon" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_mon">Mon</label>
-
-                  <input type="checkbox" class="btn-check" id="day_tues" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_tues">Tues</label>
-
-                  <input type="checkbox" class="btn-check" id="day_wed" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_wed">Wed</label>
-
-                  <input type="checkbox" class="btn-check" id="day_thurs" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_thurs">Thurs</label>
-
-                  <input type="checkbox" class="btn-check" id="day_fri" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_fri">Fri</label>
-
-                  <input type="checkbox" class="btn-check" id="day_sat" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_sat">Sat</label>
-                </div>
-                <pre></pre>
-                <!-- end service avaiblable date -->
-                <!-- start service available time -->
-                <label class="form-label">Service Available Time</label>
-                <!-- start service start time -->
-                <div class="input-group mb-3">
-                  <label class="input-group-text" for="start_time">Start Time</label>
-                  <select class="form-select" id="start_time">
-                    <option selected>Select Start Time...</option>
-                    <optgroup label="AM">
-                      <option value="9:00 AM">9:00 AM</option>
-                      <option value="10:00 AM">10:00 AM</option>
-                      <option value="11:00 AM">11:00 AM</option>
-                    </optgroup>
-                    <optgroup label="PM">
-                      <option value="12:00 PM">12:00 PM</option>
-                      <option value="1:00 PM">1:00 PM</option>
-                      <option value="2:00 PM">2:00 PM</option>
-                      <option value="3:00 PM">3:00 PM</option>
-                      <option value="4:00 PM">4:00 PM</option>
-                      <option value="5:00 PM">5:00 PM</option>
-                    </optgroup>
-                  </select>
-                </div>
-                <!-- end service start time -->
-                <!-- start service end time -->
-                <div class="input-group mb-3">
-                  <label class="input-group-text" for="end_time">End Time</label>
-                  <select class="form-select" id="start_time">
-                    <option selected>Select Start Time...</option>
-                    <optgroup label="AM">
-                      <option value="9:00 AM">10:00 AM</option>
-                      <option value="9:00 AM">11:00 AM</option>
-                    </optgroup>
-                    <optgroup label="PM">
-                      <option value="12:00 PM">12:00 PM</option>
-                      <option value="1:00 PM">1:00 PM</option>
-                      <option value="2:00 PM">2:00 PM</option>
-                      <option value="3:00 PM">3:00 PM</option>
-                      <option value="4:00 PM">4:00 PM</option>
-                      <option value="5:00 PM">5:00 PM</option>
-                      <option value="5:00 PM">6:00 PM</option>
-                    </optgroup>
-                  </select>
-                </div>
-                <!-- end service end time -->
-                <!-- end service available time -->
                 <!-- service duration -->
                 <label for="duration" class="form-label">Service Duration</label>
                 <input type="number" id="duration" class="form-control">
@@ -155,7 +89,7 @@ include_once('header.php');
                 <label for="cost" class="form-label">Service Cost</label>
                 <div class="input-group mb-3">
                   <span class="input-group-text">₱</span>
-                  <input type="text" class="form-control">
+                  <input type="number" class="form-control">
                   <span class="input-group-text">.00</span>
                 </div>
                 <!-- end service cost -->
@@ -174,18 +108,57 @@ include_once('header.php');
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-success">Add Service</button>
+                <button type="submit" class="btn btn-primary">Add Service</button>
               </div>
             </div>
           </div>
         </div>
       </form>
       <!-- end modal -->
+      <!-- start service sched modal -->
+      <?php
+      include_once('service_sched_modal.php');
+      ?>
+      <!-- end service sched modal -->
     </div>
     <!-- end container fluid -->
   </div>
   <!-- end wrapper -->
 
+  <!-- start jQuery script -->
+  <script>
+    $(document).ready(function () {
+      console.log('ready');
+
+      // CLOSE MODAL FUNCTION
+      function closeModal() {
+        $('#modAddService .btn-close').click();
+        $('#modEditService .btn-close').click();
+        $('#modDeleteService .btn-close').click();
+        clearFields();
+      } // END CLOSE MODAL FUNCTION
+
+      // CLEAR FIELDS FUNCTION
+      function clearFields() {
+
+      } // END CLEAR FIELDS FUNCTION
+
+      // ON CLOSE MODAL
+      $('#modAddService').on('hidden.bs.modal', function () {
+        clearFields();
+      });
+
+      $('#modEditService').on('hidden.bs.modal', function () {
+        clearFields();
+      });
+
+      $('#modDeleteService').on('hidden.bs.modal', function () {
+        clearFields();
+      }); // END ON CLOSE MODAL
+
+    }); // END READY
+  </script>
+  <!-- end jQuery script -->
 
   <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
 </body>

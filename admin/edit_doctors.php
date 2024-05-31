@@ -5,8 +5,9 @@ include_once('header.php');
 ?>
 
 <body>
-
+  <!-- start wrapper -->
   <div class="my-wrapper">
+    <!-- start container fluid -->
     <div class="container-fluid">
       <div class="row">
         <div class="col-4">
@@ -43,9 +44,9 @@ include_once('header.php');
       </div>
       <!-- end table -->
       <!-- add doctor modal -->
-      <form id="frmAddDoctor">
+      <form id="frmAddDoctor" method="POST">
         <div class="modal fade" id="modAddDoctor" tabindex="-1" aria-labelledby="modAddDoctorLabel" aria-hidden="true">
-          <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
               <div class="modal-header">
                 <h1 class="modal-title fs-5" id="modAddDoctorLabel">Add New Doctor</h1>
@@ -69,135 +70,54 @@ include_once('header.php');
                 <input type="number" id="contact" class="form-control" required>
                 <pre></pre>
                 <!-- end doctor contact -->
-                <!-- start avail_date -->
-                <label for="avail_date" class="form-label">Doctor's Available Date</label>
-                <div id="avail_date" class="btn-group w-100" role="group">
-
-                  <input type="checkbox" class="btn-check" id="day_sun" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_sun">Sun</label>
-
-                  <input type="checkbox" class="btn-check" id="day_mon" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_mon">Mon</label>
-
-                  <input type="checkbox" class="btn-check" id="day_tues" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_tues">Tues</label>
-
-                  <input type="checkbox" class="btn-check" id="day_wed" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_wed">Wed</label>
-
-                  <input type="checkbox" class="btn-check" id="day_thurs" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_thurs">Thurs</label>
-
-                  <input type="checkbox" class="btn-check" id="day_fri" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_fri">Fri</label>
-
-                  <input type="checkbox" class="btn-check" id="day_sat" autocomplete="off">
-                  <label class="btn btn-outline-primary" for="day_sat">Sat</label>
-                </div>
-                <pre></pre>
-                <!-- end avail date -->
-                <label for="avail_time" class="form-label">Doctor's Available Time</label>
-                <!-- start service start time -->
-                <div class="input-group mb-3">
-                  <label class="input-group-text" for="start_time">Start Time</label>
-                  <select class="form-select" id="start_time">
-                    <option selected>Select Start Time...</option>
-                    <optgroup label="AM">
-                      <option value="9:00 AM">9:00 AM</option>
-                      <option value="10:00 AM">10:00 AM</option>
-                      <option value="11:00 AM">11:00 AM</option>
-                    </optgroup>
-                    <optgroup label="PM">
-                      <option value="12:00 PM">12:00 PM</option>
-                      <option value="1:00 PM">1:00 PM</option>
-                      <option value="2:00 PM">2:00 PM</option>
-                      <option value="3:00 PM">3:00 PM</option>
-                      <option value="4:00 PM">4:00 PM</option>
-                      <option value="5:00 PM">5:00 PM</option>
-                    </optgroup>
-                  </select>
-                </div>
-                <!-- end service start time -->
-                <!-- start service end time -->
-                <div class="input-group mb-3">
-                  <label class="input-group-text" for="end_time">End Time</label>
-                  <select class="form-select" id="end_time">
-                    <option selected>Select End Time...</option>
-                    <optgroup label="AM">
-                      <option value="9:00 AM">10:00 AM</option>
-                      <option value="9:00 AM">11:00 AM</option>
-                    </optgroup>
-                    <optgroup label="PM">
-                      <option value="12:00 PM">12:00 PM</option>
-                      <option value="1:00 PM">1:00 PM</option>
-                      <option value="2:00 PM">2:00 PM</option>
-                      <option value="3:00 PM">3:00 PM</option>
-                      <option value="4:00 PM">4:00 PM</option>
-                      <option value="5:00 PM">5:00 PM</option>
-                      <option value="5:00 PM">6:00 PM</option>
-                    </optgroup>
-                  </select>
-                </div>
+                <!-- start doctor sched -->
+                <button id="btnSetSched" type="button" class="btn btn-warning w-100" data-bs-toggle="modal" data-bs-target="#modDoctorSched">Set Schedule</button>
+                <!-- end doctor sched -->
               </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="submit" class="btn btn-success">Add Doctor</button>
+                
+                <button type="submit" class="btn btn-primary">Add Doctor</button>
               </div>
             </div>
           </div>
         </div>
       </form>
       <!-- end modal -->
+      <!-- start doctor sched modal -->
+      <?php
+        include_once('doctor_sched_modal.php');
+      ?>
+      <!-- end doctor sched modal -->
     </div>
+    <!-- end container fluid -->
   </div>
+  <!-- end wrapper -->
 
   <!-- start jQuery script -->
   <script>
     $(document).ready(function () {
       console.log('ready');
+
       // CREATE DOCTOR
-      $('#frmAddDoctor').off('submit').submit(function (e) {
+      $('#frmAddDoctor').submit(function (e) {
         e.preventDefault();
 
-        var first_name = $('#first_name').val();
-        var middle_name = $('#middle_name').val();
-        var last_name = $('#last_name').val();
-        var contact = $('#contact').val();
-        
-        var avail_dates = [];
-        $('#avail_date .btn-check:checked').each(function () {
-          avail_dates.push($(this).next('label').text());
-        });
+        var doctor_data = $(this).serialize();
 
-
-        var avail_start_time = $('#start_time').val();
-        var avail_end_time = $('#end_time').val();
-
-        var doctor_data = {
-          first_name: first_name,
-          middle_name: middle_name,
-          last_name: last_name,
-          contact: contact,
-          avail_dates: avail_dates,
-          avail_start_time: avail_start_time,
-          avail_end_time: avail_end_time
-        }
-
-        // POST
         $.ajax({
           type: 'POST',
-          url: 'handles/doctors/add_doctor.php',
+          url: 'handles/doctors/create_doctor.php',
           data: doctor_data,
-          dataType: 'JSON',
-          success: function(response) {
-            // console.log(data);
+          success: function (response) {
             console.log('ADD DOCTOR RESPONSE:', response);
           },
-          error: function(error) {
+          error: function (error) {
             console.log('ADD DOCTOR ERROR:', error);
           }
-        }); // END POST
-      }); // END CREATE DOCTOR
+        });
+      });
+
 
       // CLOSE MODAL FUNCTION
       function closeModal() {
@@ -205,8 +125,7 @@ include_once('header.php');
         $('#modEditDoctor .btn-close').click();
         $('#modDeleteDoctor .btn-close').click();
         clearFields();
-      }
-
+      } // END CLOSE MODAL FUNCTION
 
       // CLEAR FIELDS FUNCTION
       function clearFields() {
@@ -214,9 +133,6 @@ include_once('header.php');
         $('#middle_name').val('');
         $('#last_name').val('');
         $('#contact').val('');
-        $('#avail_date').val('');
-        $('#avail_start_time').val('');
-        $('#avail_end_time').val('');
       } // END CLEAR FIELDS FUNCTION
 
       // ON CLOSE MODAL
@@ -232,10 +148,8 @@ include_once('header.php');
         clearFields();
       }); // END ON CLOSE MODAL
 
-
     }); // END READY
   </script>
-  <!-- end jQuery script -->
 
   <script src='https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js'></script>
 </body>

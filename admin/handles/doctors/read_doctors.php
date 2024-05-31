@@ -6,7 +6,7 @@ try {
 
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-	$sql = "SELECT * FROM tbl_Doctors";
+	$sql = "SELECT d.first_name, d.middle_name, d.last_name ";
 
 	$stmt = $pdo->query($sql);
 
